@@ -27,7 +27,7 @@ public class CategoriesController : Controller
         }
         user = JsonSerializer.Deserialize<UserDTO>(HttpContext.Session.GetString("user"));
         //pengecekan session username
-        if (Auth.CheckRole("reader,admin,contributor", user.Roles.ToList()) == false)
+        if (Auth.CheckRole("jago", user.Roles.ToList()) == false)
         {
             TempData["message"] = @"<div class='alert alert-danger'><strong>Error!</strong>Anda tidak memiliki hak akses !</div>";
             return RedirectToAction("Index", "Home");

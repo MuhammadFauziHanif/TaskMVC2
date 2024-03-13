@@ -16,6 +16,11 @@ public class HomeController : Controller
             ViewBag.Message = $"Welcome {userDto.FirstName} {userDto.LastName}";
         }
 
+        if (TempData["Message"] != null)
+        {
+            ViewBag.Message = TempData["Message"];
+        }
+
         ViewData["Title"] = "Home Page";
         return View();
     }
