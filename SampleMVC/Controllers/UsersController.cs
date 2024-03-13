@@ -20,12 +20,10 @@ namespace SampleMVC.Controllers
         public IActionResult Index()
         {
             var users = _userBLL.GetAll();
-            var listUsers = new SelectList(users, "Username", "Username");
-            ViewBag.Users = listUsers;
+            ViewBag.Users = users;
 
             var roles = _roleBLL.GetAllRoles();
-            var listRoles = new SelectList(roles, "RoleID", "RoleName");
-            ViewBag.Roles = listRoles;
+            ViewBag.Roles = roles;
 
             var usersWithRoles = _userBLL.GetAllWithRoles();
             return View(usersWithRoles);
@@ -105,6 +103,21 @@ namespace SampleMVC.Controllers
             //var userWithRoles = _userBLL.GetUserWithRoles("ekurniawan");
             var usersWithRoles = _userBLL.GetAllWithRoles();
             return new JsonResult(usersWithRoles);
+        }
+
+        [HttpPost]
+        public IActionResult AddUserToRole(string username, int roleId)
+        {
+            try
+            {
+                _roleBLL.AddUserToRole(username, roleId);
+                ViewBag.Message = @"<div class='alert alert-success'><strong>Success!&nbsp;</strong>User added to role successfully !</div>";
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Message = @"<div class='alert alert-danger'><strong>Error!&nbsp;</strong>" + ex.Message + "</div>";
+            }
+            return RedirectToAction("Index", "Users");
         }
     }
 }
