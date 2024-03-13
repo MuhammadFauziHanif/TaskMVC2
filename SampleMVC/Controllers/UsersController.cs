@@ -2,12 +2,15 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using MyWebFormApp.BLL.DTOs;
 using MyWebFormApp.BLL.Interfaces;
+using SampleMVC.Helpers;
 using System.Text.Json;
 
 namespace SampleMVC.Controllers
 {
     public class UsersController : Controller
     {
+        private UserDTO user = null;
+
         private readonly IUserBLL _userBLL;
         private readonly IRoleBLL _roleBLL;
 
@@ -19,6 +22,20 @@ namespace SampleMVC.Controllers
 
         public IActionResult Index()
         {
+
+            if (HttpContext.Session.GetString("user") == null)
+            {
+                TempData["message"] = @"<div class='alert alert-danger'><strong>Error!</strong>Anda harus login terlebih dahulu !</div>";
+                return RedirectToAction("Login", "Users");
+            }
+            user = JsonSerializer.Deserialize<UserDTO>(HttpContext.Session.GetString("user"));
+            //pengecekan session username
+            if (Auth.CheckRole("admin", user.Roles.ToList()) == false)
+            {
+                TempData["message"] = @"<div class='alert alert-danger'><strong>Error!</strong>Anda tidak memiliki hak akses !</div>";
+                return RedirectToAction("Index", "Home");
+            }
+
             var users = _userBLL.GetAll();
             ViewBag.Users = users;
 

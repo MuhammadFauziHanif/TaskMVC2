@@ -27,7 +27,7 @@ public class CategoriesController : Controller
         }
         user = JsonSerializer.Deserialize<UserDTO>(HttpContext.Session.GetString("user"));
         //pengecekan session username
-        if (Auth.CheckRole("jago", user.Roles.ToList()) == false)
+        if (Auth.CheckRole("reader", user.Roles.ToList()) == false)
         {
             TempData["message"] = @"<div class='alert alert-danger'><strong>Error!</strong>Anda tidak memiliki hak akses !</div>";
             return RedirectToAction("Index", "Home");
@@ -83,7 +83,7 @@ public class CategoriesController : Controller
         user = JsonSerializer.Deserialize<UserDTO>(HttpContext.Session.GetString("user"));
 
         //pengecekan session username
-        if (Auth.CheckRole("reader,admin,contributor", user.Roles.ToList()) == false)
+        if (Auth.CheckRole("reader,", user.Roles.ToList()) == false)
         {
             TempData["message"] = @"<div class='alert alert-danger'><strong>Error!</strong>Anda tidak memiliki hak akses !</div>";
             return RedirectToAction("Index", "Home");
@@ -95,6 +95,7 @@ public class CategoriesController : Controller
 
     public IActionResult Create()
     {
+
         if (HttpContext.Session.GetString("user") == null)
         {
             TempData["message"] = @"<div class='alert alert-danger'><strong>Error!</strong>Anda harus login terlebih dahulu !</div>";
@@ -103,7 +104,7 @@ public class CategoriesController : Controller
         user = JsonSerializer.Deserialize<UserDTO>(HttpContext.Session.GetString("user"));
 
         //pengecekan session username
-        if (Auth.CheckRole("admin,contributor", user.Roles.ToList()) == false)
+        if (Auth.CheckRole("contributor", user.Roles.ToList()) == false)
         {
             TempData["message"] = @"<div class='alert alert-danger'><strong>Error!</strong>Anda tidak memiliki hak akses !</div>";
             return RedirectToAction("Index", "Home");
